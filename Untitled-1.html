@@ -1,0 +1,425 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>UI Mini Components — Final Clean File</title>
+
+<style>
+/* ------------------- ROOT & GLOBAL ------------------- */
+:root{
+  --accent:#2563eb;
+  --muted:#94a3b8;
+  --glass:rgba(255,255,255,0.15);
+  --card-bg:rgba(255,255,255,0.12);
+  --shadow:rgba(0,0,0,0.18);
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  font-family:Inter,system-ui;
+  color:white;
+  padding:24px;
+  background:linear-gradient(135deg,#0f172a,#071129);
+}
+
+/* ------------------- LAYOUT ------------------- */
+.wrap{
+  max-width:1200px;
+  margin:auto;
+  display:grid;
+  gap:22px;
+}
+
+h1{text-align:center;margin:10px 0 24px;font-size:2rem}
+
+/* ------------------- CARD ------------------- */
+.card{
+  padding:18px;
+  border-radius:16px;
+  background:var(--card-bg);
+  backdrop-filter:blur(14px);
+  box-shadow:0 8px 28px var(--shadow);
+  transition:.3s;
+}
+.card:hover{transform:translateY(-4px);box-shadow:0 14px 40px var(--shadow)}
+
+h2{margin-bottom:12px;font-size:1.12rem}
+.muted{color:rgba(255,255,255,0.7)}
+
+/* ------------------- BUTTON ------------------- */
+.btn{
+  background:var(--accent);
+  padding:8px 14px;
+  border-radius:10px;
+  color:white;
+  border:0;
+  cursor:pointer;
+  transition:.25s;
+  font-weight:500;
+}
+.btn:hover{background:#1e3a8a}
+
+/* ------------------- PRODUCT CARD ------------------- */
+.product{display:flex;gap:16px;align-items:center}
+.product .img{
+  width:90px;height:90px;border-radius:14px;
+  background:linear-gradient(45deg,#e6f0ff,#dbeafe);
+  display:flex;align-items:center;justify-content:center;
+}
+.price{color:#60a5fa;font-weight:700}
+
+/* ------------------- TOAST ------------------- */
+.toast{
+  position:fixed;
+  bottom:20px;right:20px;
+  padding:12px 18px;
+  background:var(--accent);
+  border-radius:12px;
+  opacity:0;pointer-events:none;
+  transform:translateY(20px);
+  transition:.35s;
+}
+.toast.show{opacity:1;transform:translateY(0);pointer-events:auto}
+
+/* ------------------- FAQ ------------------- */
+.faq .q{
+  padding:12px;
+  margin-bottom:8px;
+  border-radius:10px;
+  background:var(--glass);
+  cursor:pointer;
+  display:flex;
+  justify-content:space-between;
+}
+.faq .a{
+  max-height:0;overflow:hidden;
+  transition:max-height .3s ease,padding .3s;
+  padding:0 4px;
+}
+.faq .a.open{padding:8px 4px;margin-bottom:6px}
+
+/* ------------------- TEAM GRID ------------------- */
+.team-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:16px;
+}
+.member{
+  text-align:center;
+  padding:16px;
+  border-radius:14px;
+  background:var(--glass);
+  position:relative;
+}
+.avatar{
+  width:72px;height:72px;border-radius:50%;
+  background:linear-gradient(45deg,#eef2ff,#dbeafe);
+  margin:0 auto 10px;
+  display:flex;align-items:center;justify-content:center;
+  color:#2563eb;font-weight:700;
+}
+.socials{
+  position:absolute;
+  bottom:-18px;left:50%;transform:translateX(-50%);
+  display:flex;gap:10px;
+  opacity:0;transition:.3s;
+}
+.member:hover .socials{bottom:10px;opacity:1}
+.socials a{
+  width:36px;height:36px;border-radius:10px;
+  background:white;color:#2563eb;
+  display:flex;align-items:center;justify-content:center;
+  text-decoration:none;
+}
+
+/* ------------------- TASKS ------------------- */
+.tasks ul{list-style:none}
+.tasks li{
+  display:flex;gap:10px;
+  background:var(--glass);
+  padding:10px;
+  border-radius:10px;
+  margin-bottom:6px;
+}
+.completed{text-decoration:line-through;color:var(--muted)}
+
+/* ------------------- WEATHER ------------------- */
+.weather{display:flex;justify-content:space-between;align-items:center}
+.icon{font-size:34px}
+
+/* ------------------- PRICING ------------------- */
+.pricing{display:flex;gap:16px}
+.plan{
+  padding:18px;
+  border-radius:14px;
+  text-align:center;
+  cursor:pointer;
+  transition:.3s;
+  flex:1;
+  background:var(--glass);
+}
+.plan:hover{transform:translateY(-6px);box-shadow:0 18px 36px var(--shadow)}
+.plan.recommended{
+  background:linear-gradient(180deg,#0b4ad6,#2563eb);
+  color:white;
+  transform:scale(1.05);
+}
+.features{margin-top:12px;display:flex;flex-direction:column;gap:8px}
+
+/* ------------------- MODAL ------------------- */
+.overlay{
+  position:fixed;inset:0;
+  background:rgba(0,0,0,0.55);
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;pointer-events:none;
+  transition:.3s;
+}
+.overlay.show{opacity:1;pointer-events:auto}
+.modal{
+  background:var(--card-bg);
+  padding:18px;border-radius:14px;
+  backdrop-filter:blur(14px);
+  width:100%;max-width:420px;
+}
+
+/* ------------------- FLIP CARDS ------------------- */
+.flip-wrap{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.flip{perspective:1000px}
+.card-face{
+  position:relative;height:180px;border-radius:14px;
+  transform-style:preserve-3d;
+  transition:.6s;
+}
+.face-front,.face-back{
+  position:absolute;inset:0;border-radius:14px;
+  display:flex;align-items:center;justify-content:center;
+  backface-visibility:hidden;
+}
+.face-back{transform:rotateY(180deg);background:var(--glass)}
+.flip:hover .card-face{transform:rotateY(180deg)}
+
+/* ------------------- NOTIFICATIONS ------------------- */
+.bell{position:relative;cursor:pointer}
+.notif-list{
+  position:absolute;top:40px;right:0;
+  width:260px;padding:10px;
+  border-radius:14px;
+  background:var(--glass);
+  box-shadow:0 12px 30px var(--shadow);
+  display:none;
+}
+.notif-list.show{display:block}
+.notif{padding:8px;border-radius:10px;margin-bottom:6px}
+
+/* ------------------- BIO ------------------- */
+.bio textarea{
+  width:100%;height:110px;
+  padding:10px;border-radius:12px;
+  background:var(--glass);border:0;color:white;
+}
+.char-hint{display:flex;justify-content:space-between;margin-top:6px}
+.warn{color:#facc15}
+</style>
+</head>
+
+<body>
+
+<div class="wrap">
+<h1>10 UI Mini Components</h1>
+
+<!-- PRODUCT -->
+<section class="card">
+<h2>1. Interactive Product Card</h2>
+<div class="product">
+  <div class="img">🎧</div>
+  <div class="meta">
+    <div style="display:flex;justify-content:space-between">
+      <div><strong>Pro Headphones</strong><div class="muted">High fidelity wireless</div></div>
+      <div class="price">$129</div>
+    </div>
+    <div style="margin-top:10px;display:flex;gap:8px">
+      <button class="btn" id="addCart">Add to Cart</button>
+      <button class="btn" style="background:#ef4444">❤</button>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- FAQ -->
+<section class="card faq">
+<h2>2. FAQ Section</h2>
+<div class="q">What payment methods?<span>+</span></div>
+<div class="a">We accept VISA, PayPal and more.</div>
+<div class="q">Shipping time?<span>+</span></div>
+<div class="a">About 3–6 business days.</div>
+<div class="q">Warranty?<span>+</span></div>
+<div class="a">12-month limited warranty included.</div>
+</section>
+
+<!-- TEAM -->
+<section class="card">
+<h2>3. Team Grid</h2>
+<div class="team-grid">
+  <div class="member">
+    <div class="avatar">NA</div>
+    <strong>Nahid</strong><div class="muted">Designer</div>
+    <div class="socials"><a>T</a><a>in</a><a>Dr</a></div>
+  </div>
+
+  <div class="member">
+    <div class="avatar">NR</div>
+    <strong>Nirob</strong><div class="muted">Engineer</div>
+    <div class="socials"><a>T</a><a>in</a><a>GH</a></div>
+  </div>
+
+  <div class="member">
+    <div class="avatar">RT</div>
+    <strong>Ratul</strong><div class="muted">PM</div>
+    <div class="socials"><a>T</a><a>in</a><a>FB</a></div>
+  </div>
+</div>
+</section>
+
+<!-- TASKS -->
+<section class="card tasks">
+<h2>4. Task List</h2>
+<ul>
+  <li><input type="checkbox" class="task"> Write project spec</li>
+  <li><input type="checkbox" class="task"> Design UI</li>
+  <li><input type="checkbox" class="task"> Build prototype</li>
+</ul>
+<footer>
+  <span class="muted">Progress</span>
+  <span id="progress">0 / 3 completed</span>
+</footer>
+</section>
+
+<!-- WEATHER -->
+<section class="card">
+<h2>5. Weather Card</h2>
+<div class="weather">
+  <div><strong id="temp">22</strong>°C</div>
+  <div class="icon">⛅</div>
+  <button class="btn" id="toggleTemp">Toggle °C/°F</button>
+</div>
+</section>
+
+<!-- PRICING -->
+<section class="card">
+<h2>6. Pricing Options</h2>
+<div class="pricing">
+  <div class="plan">
+    <strong>Basic</strong>
+    <div class="features"><span>1 Project</span><span>Email Support</span></div>
+  </div>
+  <div class="plan recommended">
+    <strong>Pro</strong>
+    <div class="features"><span>Unlimited Projects</span><span>Priority Support</span></div>
+  </div>
+  <div class="plan">
+    <strong>Enterprise</strong>
+    <div class="features"><span>Custom System</span><span>Dedicated Manager</span></div>
+  </div>
+</div>
+</section>
+
+<!-- FLIP CARDS -->
+<section class="card">
+<h2>7. Flip Cards</h2>
+<div class="flip-wrap">
+  <div class="flip"><div class="card-face"><div class="face-front">Card 1</div><div class="face-back">Back 1</div></div></div>
+  <div class="flip"><div class="card-face"><div class="face-front">Card 2</div><div class="face-back">Back 2</div></div></div>
+  <div class="flip"><div class="card-face"><div class="face-front">Card 3</div><div class="face-back">Back 3</div></div></div>
+</div>
+</section>
+
+<!-- MODAL -->
+<section class="card center">
+<h2>8. Contact Modal</h2>
+<button class="btn" id="openModal">Open Contact</button>
+</section>
+
+<div class="overlay" id="overlay">
+  <div class="modal">
+    <h3>Contact Us</h3>
+    <p class="muted">We will reply soon.</p>
+    <button class="btn" id="closeModal" style="margin-top:10px">Close</button>
+  </div>
+</div>
+
+<!-- NOTIFICATIONS -->
+<section class="card">
+<h2>9. Notifications</h2>
+<div class="bell" id="bell">🔔
+  <div class="notif-list" id="notifList">
+    <div class="notif">New message</div>
+    <div class="notif">Server updated</div>
+    <div class="notif">Welcome back!</div>
+  </div>
+</div>
+</section>
+
+<!-- BIO -->
+<section class="card bio">
+<h2>10. Bio Textarea with Character Count</h2>
+<textarea id="bioBox" maxlength="160"></textarea>
+<div class="char-hint"><span class="muted">Max 160 chars</span><span id="count">0/160</span></div>
+</section>
+
+</div>
+
+<div class="toast" id="toast">Added to cart!</div>
+
+<script>
+/* --------- PRODUCT --------- */
+document.getElementById("addCart").onclick = () => {
+  const t = document.getElementById("toast");
+  t.classList.add("show");
+  setTimeout(()=>t.classList.remove("show"),2000);
+};
+
+/* --------- FAQ --------- */
+document.querySelectorAll(".faq .q").forEach((q,i)=>{
+  q.onclick=()=>{
+    const ans=document.querySelectorAll(".faq .a")[i];
+    ans.style.maxHeight=ans.classList.contains("open")?"0":"80px";
+    ans.classList.toggle("open");
+  };
+});
+
+/* --------- TASKS --------- */
+const tasks=document.querySelectorAll(".task");
+const progress=document.getElementById("progress");
+function update(){
+  let done=[...tasks].filter(t=>t.checked).length;
+  progress.textContent=`${done} / ${tasks.length} completed`;
+}
+tasks.forEach(t=>t.onchange=update);
+
+/* --------- WEATHER --------- */
+let c=true;
+document.getElementById("toggleTemp").onclick=()=>{
+  let t=document.getElementById("temp");
+  t.textContent=c?(t.textContent*9/5+32).toFixed(0):(22);
+  c=!c;
+};
+
+/* --------- MODAL --------- */
+const overlay=document.getElementById("overlay");
+document.getElementById("openModal").onclick=()=>overlay.classList.add("show");
+document.getElementById("closeModal").onclick=()=>overlay.classList.remove("show");
+
+/* --------- NOTIFICATIONS --------- */
+document.getElementById("bell").onclick=()=>{
+  document.getElementById("notifList").classList.toggle("show");
+};
+
+/* --------- BIO --------- */
+const bio=document.getElementById("bioBox");
+const count=document.getElementById("count");
+bio.oninput=()=>count.textContent=`${bio.value.length}/160`;
+</script>
+
+</body>
+</html>
